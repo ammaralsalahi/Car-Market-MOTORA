@@ -1,5 +1,8 @@
+
 import 'package:flutter/material.dart';
+
 import 'package:motora/features/inquiries/data/inquiries_service.dart';
+import 'package:motora/features/inquiries/presentation/pages/chat_page.dart';
 
 class InquiriesPage extends StatefulWidget {
   const InquiriesPage({super.key});
@@ -37,7 +40,6 @@ class _InquiriesPageState extends State<InquiriesPage> {
     if (value == null) return '';
 
     final date = DateTime.tryParse(value.toString());
-
     if (date == null) return '';
 
     final localDate = date.toLocal();
@@ -47,49 +49,19 @@ class _InquiriesPageState extends State<InquiriesPage> {
         '${localDate.year}';
   }
 
-  String _statusLabel(String status) {
-    switch (status.toLowerCase()) {
-      case 'pending':
-        return 'Pending';
-      case 'replied':
-        return 'Replied';
-      case 'approved':
-        return 'Approved';
-      case 'rejected':
-        return 'Rejected';
-      case 'closed':
-        return 'Closed';
-      default:
-        return status.isEmpty ? 'Unknown' : status;
-    }
-  }
-
-  Color _statusColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'replied':
-      case 'approved':
-        return Colors.greenAccent;
-      case 'rejected':
-      case 'closed':
-        return Colors.redAccent;
-      default:
-        return accentColor;
-    }
-  }
-
   String _carName(Map<String, dynamic>? car) {
     if (car == null) return 'Car information unavailable';
 
     final brand = car['brands'];
     final model = car['models'];
 
-    final brandName = brand is Map ? brand['name']?.toString() : '';
-    final modelName = model is Map ? model['name']?.toString() : '';
+    final brandName = brand is Map ? brand['name']?.toString() ?? '' : '';
+    final modelName = model is Map ? model['name']?.toString() ?? '' : '';
 
     final parts = [
       brandName,
       modelName,
-    ].where((item) => item != null && item.isNotEmpty).toList();
+    ].where((item) => item.isNotEmpty).toList();
 
     if (parts.isNotEmpty) return parts.join(' ');
 
@@ -116,16 +88,33 @@ class _InquiriesPageState extends State<InquiriesPage> {
     if (images is! List || images.isEmpty) return null;
 
     final sortedImages = List<Map<String, dynamic>>.from(
-      images.whereType<Map>().map((item) => Map<String, dynamic>.from(item)),
+      images.whereType<Map>().map(
+        (item) => Map<String, dynamic>.from(item),
+      ),
     );
 
     sortedImages.sort(
-      (a, b) => (a['display_order'] ?? 0).compareTo(b['display_order'] ?? 0),
+      (a, b) => (a['display_order'] ?? 0).compareTo(
+        b['display_order'] ?? 0,
+      ),
     );
 
     if (sortedImages.isEmpty) return null;
 
     return sortedImages.first['image_url']?.toString();
+  }
+
+  Future<void> _openChat(Map<String, dynamic> inquiry) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ChatPage(inquiry: inquiry),
+      ),
+    );
+
+    if (mounted) {
+      setState(_loadInquiries);
+    }
   }
 
   @override
@@ -142,7 +131,7 @@ class _InquiriesPageState extends State<InquiriesPage> {
             slivers: [
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 22, 20, 18),
+                  padding: const EdgeInsets.fromLTRB(20, 25, 20, 22),
                   child: Row(
                     children: [
                       Expanded(
@@ -150,16 +139,16 @@ class _InquiriesPageState extends State<InquiriesPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
-                              'Your Inquiries',
+                              'Messages',
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 26,
+                                fontSize: 27,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             const SizedBox(height: 7),
                             Text(
-                              'Follow up on your car inquiries',
+                              'Chat with your favorite dealerships',
                               style: TextStyle(
                                 color: secondaryText,
                                 fontSize: 13,
@@ -168,13 +157,19 @@ class _InquiriesPageState extends State<InquiriesPage> {
                           ],
                         ),
                       ),
-                      IconButton(
-                        onPressed: () {
-                          setState(_loadInquiries);
-                        },
-                        icon: const Icon(
-                          Icons.refresh_rounded,
-                          color: accentColor,
+                      Container(
+                        decoration: BoxDecoration(
+                          color: cardColor,
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: IconButton(
+                          onPressed: () {
+                            setState(_loadInquiries);
+                          },
+                          icon: const Icon(
+                            Icons.refresh_rounded,
+                            color: accentColor,
+                          ),
                         ),
                       ),
                     ],
@@ -185,7 +180,8 @@ class _InquiriesPageState extends State<InquiriesPage> {
               FutureBuilder<List<Map<String, dynamic>>>(
                 future: _inquiriesFuture,
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
+                  if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
                     return const SliverFillRemaining(
                       hasScrollBody: false,
                       child: Center(
@@ -199,7 +195,7 @@ class _InquiriesPageState extends State<InquiriesPage> {
                   if (snapshot.hasError) {
                     return SliverFillRemaining(
                       hasScrollBody: false,
-                      child: _buildMessage(
+                      child: _buildEmptyState(
                         icon: Icons.error_outline_rounded,
                         title: 'Something went wrong',
                         subtitle: snapshot.error.toString(),
@@ -213,11 +209,11 @@ class _InquiriesPageState extends State<InquiriesPage> {
                   if (inquiries.isEmpty) {
                     return SliverFillRemaining(
                       hasScrollBody: false,
-                      child: _buildMessage(
+                      child: _buildEmptyState(
                         icon: Icons.chat_bubble_outline_rounded,
-                        title: 'No inquiries yet',
+                        title: 'No conversations yet',
                         subtitle:
-                            'Your car inquiries will appear here once you contact a dealership.',
+                            'Contact a dealership from a car details page to start a conversation.',
                       ),
                     );
                   }
@@ -227,7 +223,9 @@ class _InquiriesPageState extends State<InquiriesPage> {
                     sliver: SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
-                          return _buildInquiryCard(inquiries[index]);
+                          return _buildConversationCard(
+                            inquiries[index],
+                          );
                         },
                         childCount: inquiries.length,
                       ),
@@ -242,7 +240,7 @@ class _InquiriesPageState extends State<InquiriesPage> {
     );
   }
 
-  Widget _buildMessage({
+  Widget _buildEmptyState({
     required IconData icon,
     required String title,
     required String subtitle,
@@ -293,13 +291,13 @@ class _InquiriesPageState extends State<InquiriesPage> {
     );
   }
 
-  Widget _buildInquiryCard(Map<String, dynamic> inquiry) {
+  Widget _buildConversationCard(Map<String, dynamic> inquiry) {
     final car = inquiry['car'] as Map<String, dynamic>?;
-    final status = inquiry['status']?.toString() ?? '';
     final imageUrl = _carImage(car);
+    final message = inquiry['message']?.toString() ?? '';
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 14),
       decoration: BoxDecoration(
         color: cardColor,
         borderRadius: BorderRadius.circular(18),
@@ -307,34 +305,29 @@ class _InquiriesPageState extends State<InquiriesPage> {
           color: Colors.white.withValues(alpha: 0.05),
         ),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(18),
+          onTap: () => _openChat(inquiry),
+          child: Padding(
+            padding: const EdgeInsets.all(14),
+            child: Row(
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(14),
                   child: Container(
-                    width: 88,
-                    height: 78,
+                    width: 76,
+                    height: 76,
                     color: const Color(0xFF292B30),
                     child: imageUrl != null && imageUrl.isNotEmpty
                         ? Image.network(
                             imageUrl,
                             fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) => const Icon(
-                              Icons.directions_car_rounded,
-                              color: secondaryText,
-                              size: 35,
-                            ),
+                            errorBuilder: (_, __, ___) =>
+                                _carPlaceholder(),
                           )
-                        : const Icon(
-                            Icons.directions_car_rounded,
-                            color: secondaryText,
-                            size: 35,
-                          ),
+                        : _carPlaceholder(),
                   ),
                 ),
                 const SizedBox(width: 13),
@@ -343,105 +336,72 @@ class _InquiriesPageState extends State<InquiriesPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        _carName(car),
-                        maxLines: 2,
+                        _dealershipName(car),
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           color: Colors.white,
-                          fontWeight: FontWeight.bold,
                           fontSize: 15,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 7),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.storefront_rounded,
-                            color: secondaryText,
-                            size: 14,
-                          ),
-                          const SizedBox(width: 5),
-                          Expanded(
-                            child: Text(
-                              _dealershipName(car),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: secondaryText,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ),
-                        ],
+                      const SizedBox(height: 5),
+                      Text(
+                        _carName(car),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: accentColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        message.isEmpty ? 'Start chatting...' : message,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: secondaryText,
+                          fontSize: 12,
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ],
-            ),
-
-            const SizedBox(height: 15),
-            Divider(color: Colors.white.withValues(alpha: 0.07)),
-            const SizedBox(height: 10),
-
-            const Text(
-              'Your message',
-              style: TextStyle(
-                color: secondaryText,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 7),
-            Text(
-              inquiry['message']?.toString() ?? '',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-                height: 1.5,
-              ),
-            ),
-
-            const SizedBox(height: 17),
-
-            Row(
-              children: [
-                Icon(
-                  Icons.calendar_today_rounded,
-                  color: secondaryText,
-                  size: 13,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  _formatDate(inquiry['created_at']),
-                  style: const TextStyle(
-                    color: secondaryText,
-                    fontSize: 11,
-                  ),
-                ),
-                const Spacer(),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 11,
-                    vertical: 7,
-                  ),
-                  decoration: BoxDecoration(
-                    color: _statusColor(status).withValues(alpha: 0.10),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    _statusLabel(status),
-                    style: TextStyle(
-                      color: _statusColor(status),
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
+                const SizedBox(width: 8),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      _formatDate(inquiry['created_at']),
+                      style: const TextStyle(
+                        color: secondaryText,
+                        fontSize: 10,
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: 12),
+                    const Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      color: accentColor,
+                      size: 15,
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget _carPlaceholder() {
+    return const Center(
+      child: Icon(
+        Icons.directions_car_rounded,
+        color: secondaryText,
+        size: 32,
       ),
     );
   }
