@@ -48,28 +48,28 @@ The project aims to provide a simple and modern experience for discovering cars 
 ## 📱 App Screenshots
 
 <p align="center">
-  <img src="assets/screenshots/home1.jpg" width="250" />
-  <img src="assets/screenshots/home2.jpg" width="250" />
-  <img src="assets/screenshots/login.jpg" width="250" />
-  <img src="assets/screenshots/register.jpg" width="250" />
-  <img src="assets/screenshots/favorites.jpg" width="250" />
-  <img src="assets/screenshots/favorites1.jpg" width="250" />
-  <img src="assets/screenshots/cardetalis1.jpg" width="250" />
-  <img src="assets/screenshots/cardetalis2.jpg" width="250" />
-  <img src="assets/screenshots/contact.jpg" width="250" />
+  <img src="assets/sccreenshots/home1.jpg" width="250" />
+  <img src="assets/sccreenshots/home2.jpg" width="250" />
+  <img src="assets/sccreenshots/login.jpg" width="250" />
+  <img src="assets/sccreenshots/register.jpg" width="250" />
+  <img src="assets/sccreenshots/favorites.jpg" width="250" />
+  <img src="assets/sccreenshots/favorites1.jpg" width="250" />
+  <img src="assets/sccreenshots/cardetalis1.jpg" width="250" />
+  <img src="assets/sccreenshots/cardetalis2.jpg" width="250" />
+  <img src="assets/sccreenshots/contact.jpg" width="250" />
 </p>
 
 <p align="center">
-  <img src="assets/screenshots/addcar.jpg" width="250" />
-  <img src="assets/screenshots/addcar2.jpg" width="250" />
-  <img src="assets/screenshots/dealershipdash.jpg" width="250" />
-  <img src="assets/screenshots/dealershipdash.jpg" width="250" />
-  <img src="assets/screenshots/dealerships.jpg" width="250" />
-  <img src="assets/screenshots/dealerships1.jpg" width="250" />
-  <img src="assets/screenshots/delarshipDash.jpg" width="250" />
-  <img src="assets/screenshots/inquries.jpg" width="250" />
-  <img src="assets/screenshots/profile1.jpg" width="250" />
-  <img src="assets/screenshots/profile.jpg" width="250" />
+  <img src="assets/sccreenshots/addcar.jpg" width="250" />
+  <img src="assets/sccreenshots/addcar2.jpg" width="250" />
+  <img src="assets/sccreenshots/dealershipdash.jpg" width="250" />
+  <img src="assets/sccreenshots/dealershipdash.jpg" width="250" />
+  <img src="assets/sccreenshots/dealerships.jpg" width="250" />
+  <img src="assets/sccreenshots/dealerships1.jpg" width="250" />
+  <img src="assets/sccreenshots/delarshipDash.jpg" width="250" />
+  <img src="assets/sccreenshots/inquries.jpg" width="250" />
+  <img src="assets/sccreenshots/profile1.jpg" width="250" />
+  <img src="assets/sccreenshots/profile.jpg" width="250" />
 </p>
 ## 🏗️ Project Structure
 
