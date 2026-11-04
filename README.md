@@ -45,20 +45,32 @@ The project aims to provide a simple and modern experience for discovering cars 
 
 ---
 
-## 📱 Screenshots
+## 📱 App Screenshots
 
-Screenshots of the application will be added here.
+<p align="center">
+  <img src="assets/screenshots/home1.jpg" width="250" />
+  <img src="assets/screenshots/home2.jpg" width="250" />
+  <img src="assets/screenshots/login.jpg" width="250" />
+  <img src="assets/screenshots/register.jpg" width="250" />
+  <img src="assets/screenshots/favorites.jpg" width="250" />
+  <img src="assets/screenshots/favorites1.jpg" width="250" />
+  <img src="assets/screenshots/cardetalis1.jpg" width="250" />
+  <img src="assets/screenshots/cardetalis2.jpg" width="250" />
+  <img src="assets/screenshots/contact.jpg" width="250" />
+</p>
 
-| Home | Car Details | Favorites |
-|---|---|---|
-| *Coming Soon* | *Coming Soon* | *Coming Soon* |
-
-| Inquiries | Chat | Dealerships |
-|---|---|---|
-| *Coming Soon* | *Coming Soon* | *Coming Soon* |
-
----
-
+<p align="center">
+  <img src="assets/screenshots/addcar.jpg" width="250" />
+  <img src="assets/screenshots/addcar2.jpg" width="250" />
+  <img src="assets/screenshots/dealershipdash.jpg" width="250" />
+  <img src="assets/screenshots/dealershipdash.jpg" width="250" />
+  <img src="assets/screenshots/dealerships.jpg" width="250" />
+  <img src="assets/screenshots/dealerships1.jpg" width="250" />
+  <img src="assets/screenshots/delarshipDash.jpg" width="250" />
+  <img src="assets/screenshots/inquries.jpg" width="250" />
+  <img src="assets/screenshots/profile1.jpg" width="250" />
+  <img src="assets/screenshots/profile.jpg" width="250" />
+</p>
 ## 🏗️ Project Structure
 
 The project follows a feature-based architecture to keep the code organized and maintainable.
